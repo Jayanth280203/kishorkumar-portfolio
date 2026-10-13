@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Kishor Kumar Portfolio</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons (CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Admin Stylesheet -->
+  <link rel="stylesheet" href="css/admin.css">
+
+  <!-- Google Identity Services & Picker API for Google Drive integration -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://apis.google.com/js/api.js" async defer></script>
+</head>
+<body>
+
+  <!-- ==============================================================================
+       1. SECURE LOGIN SCREEN (Shown when not authenticated)
+       ============================================================================== -->
+  <div class="login-screen-wrap" id="loginScreen">
+    <div class="login-card">
+      <div class="login-brand-icon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h1 class="login-title">Admin Access</h1>
+      <p class="login-subtitle">Sign in to manage Kishor Kumar's Portfolio CMS</p>
+
+      <div class="login-alert error" id="loginErrorAlert">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span id="loginErrorText">Invalid credentials.</span>
+      </div>
+
+      <form id="adminLoginForm">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="loginEmail">Authorized Administrator Email</label>
+          <input type="email" id="loginEmail" class="form-control" placeholder="kishorsk1702@gmail.com" required autocomplete="username">
+        </div>
+
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="loginPassword">Administrator Password</label>
+          <input type="password" id="loginPassword" class="form-control" placeholder="••••••••••••" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="admin-btn admin-btn-primary" id="loginSubmitBtn" style="width: 100%; margin-top: 0.5rem;">
+          <i class="fa-solid fa-lock-open"></i> Secure Sign In
+        </button>
+      </form>
+
+      <div style="margin-top: 1.75rem; font-size: 0.78rem; color: var(--admin-text-dim); line-height: 1.5; border-top: 1px solid var(--admin-border); padding-top: 1.25rem;">
+        <i class="fa-solid fa-key" style="color:var(--admin-accent-cyan);"></i> Credentials are configured in the server's <code>.env</code> file. Unauthorized access is monitored and protected.
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       2. FULL ADMIN DASHBOARD SHELL (Shown when authenticated)
+       ============================================================================== -->
+  <div class="admin-shell" id="adminDashboardShell" style="display: none;">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-badge">KK</div>
+          <span>Portfolio CMS</span>
+        </div>
+        <button type="button" class="admin-btn-outline" id="sidebarCloseBtn" style="display: none; padding: 0.2rem 0.5rem;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-section-title">Core Management</span>
+        <a class="sidebar-link active" data-tab="overview">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard Overview
+        </a>
+        <a class="sidebar-link" data-tab="profile">
+          <i class="fa-solid fa-user-pen"></i> Profile & About
+        </a>
+        <a class="sidebar-link" data-tab="experience">
+          <i class="fa-solid fa-briefcase"></i> Experience
+        </a>
+        <a class="sidebar-link" data-tab="skills">
+          <i class="fa-solid fa-screwdriver-wrench"></i> Skills
+        </a>
+        <a class="sidebar-link" data-tab="projects">
+          <i class="fa-solid fa-folder-tree"></i> Projects
+        </a>
+        <a class="sidebar-link" data-tab="enquiries" id="sidebarEnquiriesLink">
+          <i class="fa-solid fa-inbox"></i> Contact Enquiries
+          <span class="sidebar-counter-badge" id="enquiriesBadge" style="display: none; background: #06b6d4; color: #040914; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 999px; margin-left: auto;">0</span>
+        </a>
+
+        <span class="nav-section-title">Documents & Media</span>
+        <a class="sidebar-link" data-tab="resume">
+          <i class="fa-solid fa-file-pdf"></i> Resume Manager
+        </a>
+        <a class="sidebar-link" data-tab="media">
+          <i class="fa-solid fa-photo-film"></i> Media Library
+        </a>
+
+        <span class="nav-section-title">Site Settings</span>
+        <a class="sidebar-link" data-tab="social">
+          <i class="fa-solid fa-share-nodes"></i> Professional Links
+        </a>
+        <a class="sidebar-link" data-tab="sections">
+          <i class="fa-solid fa-font"></i> Website Sections
+        </a>
+        <a class="sidebar-link" data-tab="seo">
+          <i class="fa-solid fa-magnifying-glass"></i> SEO Settings
+        </a>
+
+        <span class="nav-section-title">Navigation</span>
+        <a href="/" class="sidebar-link" style="color: var(--admin-accent-cyan);">
+          <i class="fa-solid fa-arrow-left"></i> Return to Portfolio
+        </a>
+        <a href="/" target="_blank" class="sidebar-link">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live (New Tab)
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="admin-user-pill">
+          <span class="admin-user-label">Logged In As</span>
+          <span class="admin-user-email" id="sidebarAdminEmail">admin@kishorkumar.dev</span>
+        </div>
+        <button type="button" class="admin-btn-outline" id="sidebarLogoutBtn" title="Logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <div class="admin-main">
+      
+      <!-- Top Navigation Header -->
+      <header class="admin-header">
+        <div class="admin-header-left">
+          <button type="button" class="admin-mobile-toggle" id="adminMobileToggle">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <h2 class="admin-page-title" id="adminPageTitle">Dashboard Overview</h2>
+        </div>
+
+        <div class="admin-header-actions">
+          <a href="/" class="admin-btn admin-btn-outline admin-btn-sm" title="Return to Public Portfolio without logging out">
+            <i class="fa-solid fa-arrow-left"></i> Return to Portfolio
+          </a>
+
+          <span class="status-badge published" id="publishStatusBadge">
+            <i class="fa-solid fa-circle-check"></i> Published Live
+          </span>
+
+          <button type="button" class="admin-btn admin-btn-success admin-btn-sm" id="publishAllBtn">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Publish Changes
+          </button>
+        </div>
+      </header>
+
+      <!-- Viewport Body -->
+      <main class="admin-content-view">
+
+        <!-- ----------------------------------------------------------------------
+             TAB 1: DASHBOARD OVERVIEW
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane active" id="pane-overview">
+          <div class="overview-stats-grid">
+            <div class="overview-stat-card">
+              <div class="stat-icon-wrap blue"><i class="fa-solid fa-folder-open"></i></div>
+              <div class="stat-details">
+                <span class="stat-number" id="statTotalProjects">7</span>
+                <span class="stat-name">Total Projects</span>
+              </div>
+            </div>
+
+            <div class="overview-stat-card">
+              <div class="stat-icon-wrap green"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="stat-details">
+                <span class="stat-number" id="statPublishedProjects">7</span>
+                <span class="stat-name">Published Projects</span>
+              </div>
+            </div>
+
+            <div class="overview-stat-card">
+              <div class="stat-icon-wrap amber"><i class="fa-solid fa-pencil"></i></div>
+              <div class="stat-details">
+                <span class="stat-number" id="statDraftProjects">0</span>
+                <span class="stat-name">Draft Projects</span>
+              </div>
+            </div>
+
+            <div class="overview-stat-card">
+              <div class="stat-icon-wrap purple"><i class="fa-solid fa-file-pdf"></i></div>
+              <div class="stat-details">
+                <span class="stat-number" id="statActiveResumeName" style="font-size: 1.1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;">Resume.pdf</span>
+                <span class="stat-name">Active Resume</span>
+              </div>
+            </div>
+
+            <div class="overview-stat-card" style="cursor: pointer;" id="statEnquiriesCard">
+              <div class="stat-icon-wrap cyan"><i class="fa-solid fa-inbox"></i></div>
+              <div class="stat-details">
+                <span class="stat-number" id="statUnreadEnquiries">0</span>
+                <span class="stat-name">Unread Inquiries (<span id="statTotalEnquiries">0</span> Total)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3 class="admin-card-title"><i class="fa-solid fa-bolt" style="color:var(--admin-accent-cyan);"></i> Quick Actions</h3>
+                <p class="admin-card-subtitle">Manage high-frequency portfolio tasks in one click</p>
+              </div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.85rem;">
+              <button type="button" class="admin-btn admin-btn-primary" id="qaNewProjectBtn">
+                <i class="fa-solid fa-plus"></i> Add New Project
+              </button>
+              <button type="button" class="admin-btn admin-btn-secondary" id="qaUploadResumeBtn">
+                <i class="fa-solid fa-upload"></i> Upload / Replace Resume
+              </button>
+              <button type="button" class="admin-btn admin-btn-secondary" id="qaViewEnquiriesBtn">
+                <i class="fa-solid fa-inbox"></i> View Inquiries Inbox
+              </button>
+              <button type="button" class="admin-btn admin-btn-secondary" id="qaEditProfileBtn">
+                <i class="fa-solid fa-user-pen"></i> Edit Profile & About
+              </button>
+              <button type="button" class="admin-btn admin-btn-secondary" id="qaManageMediaBtn">
+                <i class="fa-solid fa-photo-film"></i> Upload Images
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3 class="admin-card-title"><i class="fa-solid fa-clock-rotate-left"></i> System & Publishing Status</h3>
+                <p class="admin-card-subtitle">Snapshot of data storage and live deployment status</p>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+              <div style="background: rgba(9,17,34,0.6); padding: 1rem; border-radius: 10px; border: 1px solid var(--admin-border);">
+                <span style="font-size: 0.75rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 700;">Database Storage</span>
+                <p style="font-size: 0.95rem; font-weight: 600; color: #fff; margin-top: 0.25rem;">Persistent Atomic JSON Database (data/portfolio_db.json)</p>
+              </div>
+              <div style="background: rgba(9,17,34,0.6); padding: 1rem; border-radius: 10px; border: 1px solid var(--admin-border);">
+                <span style="font-size: 0.75rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 700;">Last Published</span>
+                <p style="font-size: 0.95rem; font-weight: 600; color: #4ade80; margin-top: 0.25rem;" id="overviewLastPublished">Today</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------------------------
+             TAB 2: PROFILE & ABOUT ME
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane" id="pane-profile">
+          <form id="profileForm">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <div>
+                  <h3 class="admin-card-title"><i class="fa-solid fa-id-card"></i> Personal & Hero Information</h3>
+                  <p class="admin-card-subtitle">Primary titles, bio, and hero presentation</p>
+                </div>
+                <button type="submit" class="admin-btn admin-btn-primary admin-btn-sm">Save Profile</button>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="profName">Full Name <span class="req">*</span></label>
+                  <input type="text" id="profName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profTitle">Professional Title <span class="req">*</span></label>
+                  <input type="text" id="profTitle" class="form-control" placeholder="Data Analyst" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="profShortBio">Short Professional Summary / Bio <span class="req">*</span></label>
+                <textarea id="profShortBio" class="form-control" rows="3" required></textarea>
+              </div>
+
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label class="form-label" for="profExpYears">Experience Years</label>
+                  <input type="text" id="profExpYears" class="form-control" placeholder="2+">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profLocation">Location / Relocation Status</label>
+                  <input type="text" id="profLocation" class="form-control" placeholder="India (Open to Remote & Relocation)">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profAvailability">Availability Status</label>
+                  <input type="text" id="profAvailability" class="form-control" placeholder="Available for Data Analyst Roles">
+                </div>
+              </div>
+
+              <div class="form-group" style="background: rgba(9, 17, 34, 0.65); border: 1px solid var(--admin-border); border-radius: 14px; padding: 1.25rem;">
+                <label class="form-label" style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 0.75rem;">
+                  <i class="fa-solid fa-camera" style="color: var(--admin-accent-cyan);"></i> Profile Picture
+                </label>
+                <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                  <!-- Circular Preview Container -->
+                  <div style="position: relative; width: 90px; height: 90px; border-radius: 50%; overflow: hidden; border: 3px solid var(--admin-accent-cyan); background: #070c18; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);">
+                    <img id="adminPhotoPreviewImg" src="" alt="Profile Preview" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    <div id="adminPhotoFallback" style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--admin-accent-cyan);">
+                      <i class="fa-solid fa-user-tie" style="font-size: 2rem;"></i>
+                    </div>
+                  </div>
+
+                  <!-- Action Controls -->
+                  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                      <input type="file" id="profPhotoFileInput" accept="image/png,image/jpeg,image/webp,image/jpg" style="display: none;">
+                      <button type="button" class="admin-btn admin-btn-primary admin-btn-sm" id="profUploadPhotoBtn">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload From Device
+                      </button>
+                      <button type="button" class="admin-btn admin-btn-danger admin-btn-sm" id="profRemovePhotoBtn">
+                        <i class="fa-solid fa-trash"></i> Remove Photo
+                      </button>
+                    </div>
+                    <div class="input-with-action" style="margin-top: 0.25rem;">
+                      <input type="text" id="profPhotoUrl" class="form-control" placeholder="uploads/images/profile.jpg">
+                    </div>
+                    <span style="font-size: 0.78rem; color: var(--admin-text-dim);">
+                      Supports PNG, JPG, or WEBP. Uploaded images are stored in <code>/uploads/images/</code> and served in a circular frame on the public hero.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- About Section Details -->
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <div>
+                  <h3 class="admin-card-title"><i class="fa-solid fa-user-tie"></i> About Me Section</h3>
+                  <p class="admin-card-subtitle">Longer narrative, career pillars, and statistics</p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="aboutHeading">About Section Heading</label>
+                <input type="text" id="aboutHeading" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="aboutLead">About Lead Subtitle</label>
+                <input type="text" id="aboutLead" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="aboutP1">Paragraph 1 (Core Focus)</label>
+                <textarea id="aboutP1" class="form-control" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="aboutP2">Paragraph 2 (Technical Stack)</label>
+                <textarea id="aboutP2" class="form-control" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="aboutP3">Paragraph 3 (Business Impact)</label>
+                <textarea id="aboutP3" class="form-control" rows="3"></textarea>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                <button type="submit" class="admin-btn admin-btn-primary">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Profile & About Draft
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- ----------------------------------------------------------------------
+             TAB 3: EXPERIENCE
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane" id="pane-experience">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3 class="admin-card-title"><i class="fa-solid fa-briefcase"></i> Work Experience</h3>
+                <p class="admin-card-subtitle">Manage career roles, companies, dates, and achievements</p>
+              </div>
+              <button type="button" class="admin-btn admin-btn-primary admin-btn-sm" id="addExpBtn">
+                <i class="fa-solid fa-plus"></i> Add Experience
+              </button>
+            </div>
+
+            <div id="experienceListContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------------------------
+             TAB 4: SKILLS
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane" id="pane-skills">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3 class="admin-card-title"><i class="fa-solid fa-screwdriver-wrench"></i> Technical & Analytical Skills</h3>
+                <p class="admin-card-subtitle">Manage skill categories, technology chips, and proficiency levels</p>
+              </div>
+              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" id="addSkillCategoryBtn">
+                  <i class="fa-solid fa-folder-plus"></i> Add Category
+                </button>
+                <button type="button" class="admin-btn admin-btn-primary admin-btn-sm" id="saveSkillsBtn">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Skills
+                </button>
+              </div>
+            </div>
+
+            <div id="skillsCategoriesContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------------------------
+             TAB 5: PROJECTS (Full Project Management)
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane" id="pane-projects">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3 class="admin-card-title"><i class="fa-solid fa-diagram-project"></i> Project Portfolio Management</h3>
+                <p class="admin-card-subtitle">Add, edit, duplicate, reorder, and publish analytical projects</p>
+              </div>
+              <button type="button" class="admin-btn admin-btn-primary admin-btn-sm" id="openNewProjectModalBtn">
+                <i class="fa-solid fa-plus"></i> Add Project
+              </button>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table" id="projectsAdminTable">
+                <thead>
+                  <tr>
+                    <th>Order</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Tech Stack</th>
+                    <th>Status</th>
+                    <th>Links</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="projectsTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------------------------
+             TAB 6: RESUME MANAGER
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane" id="pane-resume">
+          <!-- Active Resume Banner -->
+          <div class="admin-card" style="border-color: rgba(56, 189, 248, 0.35);">
+            <div class="admin-card-header">
+              <div>
+                <h3 class="admin-card-title"><i class="fa-solid fa-file-check" style="color:var(--admin-accent-green);"></i> Active Published Resume</h3>
+                <p class="admin-card-subtitle">This document is served when visitors click "Download Resume" or "View Resume"</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <a href="/api/resume/download" class="admin-btn admin-btn-primary admin-btn-sm" target="_blank">
+                  <i class="fa-solid fa-download"></i> Test Download
+                </a>
+                <a href="/api/resume/preview" class="admin-btn admin-btn-secondary admin-btn-sm" target="_blank">
+                  <i class="fa-solid fa-eye"></i> View Document
+                </a>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+              <div style="font-size: 2.2rem; color: #f87171;"><i class="fa-solid fa-file-pdf"></i></div>
+              <div>
+                <h4 style="font-size: 1.15rem; color: #fff;" id="activeResumeTitle">Kishor_Kumar_Resume.pdf</h4>
+                <p style="font-size: 0.82rem; color: var(--admin-text-muted);" id="activeResumeMeta">Source: Local Asset • Ready for Download</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upload Channels -->
+          <div class="form-grid-2">
+            <!-- OPTION A & B: Drag & Drop + File Picker -->
+            <div class="admin-card">
+              <h3 class="admin-card-title" style="margin-bottom: 0.75rem;">
+                <i class="fa-solid fa-hard-drive"></i> Upload From Device
+              </h3>
+              <p class="admin-card-subtitle" style="margin-bottom: 1.25rem;">Supports PDF, DOC, and DOCX (Max 15MB)</p>
+
+              <div class="resume-dropzone" id="resumeDropzone">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <h4>Drag & drop your resume file here</h4>
+                <p>or click to browse your computer</p>
+                <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display: none;">
+              </div>
+
+              <div id="resumeUploadProgress" style="display: none; margin-top: 1rem;">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.25rem;">
+                  <span>Uploading document...</span>
+                  <span id="resumeUploadPct">0%</span>
+                </div>
+                <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                  <div id="resumeProgressBar" style="width: 0%; height: 100%; background: var(--admin-primary); transition: width 0.2s;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- OPTION C: Google Drive Picker Integration -->
+            <div class="admin-card">
+              <h3 class="admin-card-title" style="margin-bottom: 0.75rem;">
+                <i class="fa-brands fa-google-drive" style="color:#38bdf8;"></i> Google Drive Import
+              </h3>
+              <p class="admin-card-subtitle" style="margin-bottom: 1.25rem;">
+                Select a resume directly from your Google Drive account using Google Picker API
+              </p>
+
+              <div class="gdrive-card">
+                <div>
+                  <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.25rem;">Official Google Picker API</h4>
+                  <p style="font-size: 0.82rem; color: var(--admin-text-muted);">
+                    Select document with OAuth authorization
+                  </p>
+                </div>
+                <button type="button" class="admin-btn admin-btn-primary admin-btn-sm" id="googleDriveImportBtn">
+                  <i class="fa-brands fa-google-drive"></i> Choose from Drive
+                </button>
+              </div>
+
+              <div style="background: rgba(9,17,34,0.6); padding: 1rem; border-radius: 10px; border: 1px solid var(--admin-border); font-size: 0.8rem; color: var(--admin-text-muted); line-height: 1.5;">
+                <p style="font-weight: 700; color: #fff; margin-bottom: 0.25rem;">
+                  <i class="fa-solid fa-circle-info" style="color:var(--admin-accent-cyan);"></i> Setup Guide:
+                </p>
+                To enable Google Drive Picker, configure <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_API_KEY</code> in your <code>.env</code> file. Click "Choose from Drive" to test or view step-by-step instructions.
+              </div>
+            </div>
+          </div>
+
+          <!-- Resume Version History Table -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3 class="admin-card-title"><i class="fa-solid fa-clock-rotate-left"></i> Resume Library & History</h3>
+                <p class="admin-card-subtitle">Stored documents in persistent storage. Switch active resume at any time.</p>
+              </div>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Filename</th>
+                    <th>Uploaded Date</th>
+                    <th>Size</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="resumeTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------------------------
+             TAB 7: MEDIA LIBRARY
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane" id="pane-media">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3 class="admin-card-title"><i class="fa-solid fa-photo-film"></i> Upload Images</h3>
+                <p class="admin-card-subtitle">Upload profile photos, project covers, and dashboard screenshots (JPG, PNG, WebP)</p>
+              </div>
+              <div>
+                <input type="file" id="mediaFileInput" accept="image/*" style="display: none;">
+                <button type="button" class="admin-btn admin-btn-primary admin-btn-sm" id="mediaUploadBtn">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload Image
+                </button>
+              </div>
+            </div>
+
+            <div class="media-grid" id="mediaGrid">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------------------------
+             TAB 8: SOCIAL & PROFESSIONAL LINKS
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane" id="pane-social">
+          <!-- Dynamic Social Profiles Card -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3 class="admin-card-title"><i class="fa-solid fa-share-nodes"></i> Professional & Social Profiles</h3>
+                <p class="admin-card-subtitle">Manage public social profiles dynamically. Public visitors only see enabled profiles with valid URLs.</p>
+              </div>
+              <button type="button" class="admin-btn admin-btn-primary admin-btn-sm" id="addSocialProfileBtn">
+                <i class="fa-solid fa-plus"></i> Add Profile Link
+              </button>
+            </div>
+
+            <div id="socialProfilesListContainer" style="display: flex; flex-direction: column; gap: 0.85rem;">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Direct Contact Details Card -->
+          <form id="contactDetailsForm">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <div>
+                  <h3 class="admin-card-title"><i class="fa-solid fa-address-book"></i> Direct Contact & Availability Details</h3>
+                  <p class="admin-card-subtitle">Displayed across the contact section and hero availability badge</p>
+                </div>
+                <button type="submit" class="admin-btn admin-btn-primary admin-btn-sm" id="saveContactDetailsBtn">Save Contact Details</button>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="linkEmail"><i class="fa-solid fa-envelope" style="color:#f59e0b;"></i> Public Contact Email Address</label>
+                <input type="email" id="linkEmail" class="form-control" placeholder="kishorsk1702@gmail.com">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="linkLocation"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> Location</label>
+                <input type="text" id="linkLocation" class="form-control" placeholder="India (Open to Remote, Hybrid & Relocation)">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="linkAvailability"><i class="fa-solid fa-circle-check" style="color:#10b981;"></i> Availability Status Badge</label>
+                <input type="text" id="linkAvailability" class="form-control" placeholder="Available for Full-Time Roles">
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                <button type="submit" class="admin-btn admin-btn-primary">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Contact Details
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- ----------------------------------------------------------------------
+             TAB: CONTACT ENQUIRIES INBOX
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane" id="pane-enquiries">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3 class="admin-card-title"><i class="fa-solid fa-inbox"></i> Contact Enquiries Inbox</h3>
+                <p class="admin-card-subtitle">Real-time incoming inquiries submitted through the public website contact form</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" id="refreshEnquiriesBtn" title="Refresh Inbox">
+                  <i class="fa-solid fa-rotate"></i> Refresh
+                </button>
+              </div>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+              <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                <button type="button" class="admin-btn admin-btn-sm enq-filter-btn active" data-filter="all" id="filterEnqAll">All Messages (<span id="countEnqAll">0</span>)</button>
+                <button type="button" class="admin-btn admin-btn-sm enq-filter-btn" data-filter="unread" id="filterEnqUnread">Unread (<span id="countEnqUnread">0</span>)</button>
+                <button type="button" class="admin-btn admin-btn-sm enq-filter-btn" data-filter="read" id="filterEnqRead">Read (<span id="countEnqRead">0</span>)</button>
+                <button type="button" class="admin-btn admin-btn-sm enq-filter-btn" data-filter="archived" id="filterEnqArchived">Archived (<span id="countEnqArchived">0</span>)</button>
+              </div>
+              <div style="position: relative; min-width: 250px;">
+                <input type="text" id="enquirySearchInput" class="form-control" placeholder="Search by name, email, subject..." style="padding-left: 2.2rem; font-size: 0.88rem;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--admin-text-dim); font-size: 0.85rem;"></i>
+              </div>
+            </div>
+
+            <!-- Enquiries List Container -->
+            <div id="enquiriesListContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------------------------
+             TAB 9: WEBSITE SECTIONS & STATIC TEXT
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane" id="pane-sections">
+          <form id="sectionsForm">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <div>
+                  <h3 class="admin-card-title"><i class="fa-solid fa-font"></i> Website Branding & Navigation Labels</h3>
+                  <p class="admin-card-subtitle">Customize every visible label and navbar item</p>
+                </div>
+                <button type="submit" class="admin-btn admin-btn-primary admin-btn-sm">Save Text</button>
+              </div>
+
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label class="form-label" for="txtSiteName">Website Brand Name</label>
+                  <input type="text" id="txtSiteName" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="txtLogoBadge">Logo Badge Initials</label>
+                  <input type="text" id="txtLogoBadge" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="txtNavCta">Navbar CTA Button Label</label>
+                  <input type="text" id="txtNavCta" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="txtFooterCopyright">Footer Copyright Text</label>
+                  <input type="text" id="txtFooterCopyright" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="txtFooterTagline">Footer Tagline</label>
+                  <input type="text" id="txtFooterTagline" class="form-control">
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <div>
+                  <h3 class="admin-card-title"><i class="fa-solid fa-bars"></i> Navigation Menu Labels</h3>
+                  <p class="admin-card-subtitle">Header navbar link names</p>
+                </div>
+              </div>
+
+              <div class="form-grid-3">
+                <div class="form-group"><label class="form-label">Home</label><input type="text" id="navLblHome" class="form-control"></div>
+                <div class="form-group"><label class="form-label">About</label><input type="text" id="navLblAbout" class="form-control"></div>
+                <div class="form-group"><label class="form-label">Experience</label><input type="text" id="navLblExperience" class="form-control"></div>
+                <div class="form-group"><label class="form-label">Skills</label><input type="text" id="navLblSkills" class="form-control"></div>
+                <div class="form-group"><label class="form-label">Projects</label><input type="text" id="navLblProjects" class="form-control"></div>
+                <div class="form-group"><label class="form-label">Dashboards</label><input type="text" id="navLblDashboards" class="form-control"></div>
+                <div class="form-group"><label class="form-label">Resume</label><input type="text" id="navLblResume" class="form-control"></div>
+                <div class="form-group"><label class="form-label">Contact</label><input type="text" id="navLblContact" class="form-control"></div>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                <button type="submit" class="admin-btn admin-btn-primary">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Section Labels
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- ----------------------------------------------------------------------
+             TAB 10: SEO SETTINGS
+             ---------------------------------------------------------------------- -->
+        <div class="admin-tab-pane" id="pane-seo">
+          <form id="seoForm">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <div>
+                  <h3 class="admin-card-title"><i class="fa-solid fa-magnifying-glass"></i> Search Engine Optimization (SEO)</h3>
+                  <p class="admin-card-subtitle">Meta tags, keywords, and OpenGraph social preview</p>
+                </div>
+                <button type="submit" class="admin-btn admin-btn-primary admin-btn-sm">Save SEO</button>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="seoMetaTitle">Browser Page Title</label>
+                <input type="text" id="seoMetaTitle" class="form-control" placeholder="Kishor Kumar | Data Analyst Portfolio">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="seoMetaDesc">Meta Description</label>
+                <textarea id="seoMetaDesc" class="form-control" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="seoKeywords">Meta Keywords (Comma separated)</label>
+                <input type="text" id="seoKeywords" class="form-control" placeholder="Data Analyst, SQL, Python, Power BI">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="seoOgImage">Social Share Image Path (og:image)</label>
+                <input type="text" id="seoOgImage" class="form-control" placeholder="assets/profile.jpg">
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                <button type="submit" class="admin-btn admin-btn-primary">
+                  <i class="fa-solid fa-floppy-disk"></i> Save SEO Settings
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       MODALS
+       ============================================================================== -->
+
+  <!-- PROJECT EDIT MODAL -->
+  <div class="admin-modal-overlay" id="projectModal">
+    <div class="admin-modal-box">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="projectModalTitle">Add Project</h3>
+        <button type="button" class="admin-btn-outline" id="closeProjectModalBtn">&times;</button>
+      </div>
+
+      <div class="admin-modal-body">
+        <form id="projectModalForm">
+          <input type="hidden" id="pmId">
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="pmTitle">Project Title <span class="req">*</span></label>
+              <input type="text" id="pmTitle" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pmCategory">Category <span class="req">*</span></label>
+              <select id="pmCategory" class="form-control">
+                <option value="Python">Python</option>
+                <option value="SQL">SQL</option>
+                <option value="Power BI">Power BI</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="pmBadge">Card Tag / Sub-badge</label>
+              <input type="text" id="pmBadge" class="form-control" placeholder="e.g. Customer Analytics">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pmTech">Technologies (Comma separated)</label>
+              <input type="text" id="pmTech" class="form-control" placeholder="Python, Pandas, Seaborn">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="pmShortDesc">Short Description <span class="req">*</span></label>
+            <textarea id="pmShortDesc" class="form-control" rows="2" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="pmDetailedDesc">Detailed Description</label>
+            <textarea id="pmDetailedDesc" class="form-control" rows="3"></textarea>
+          </div>
+
+          <!-- PROJECT KEY POINTS EDITOR -->
+          <div class="form-group">
+            <label class="form-label">Key Points Solved (Repeatable List)</label>
+            <div class="key-points-manager">
+              <div class="key-points-header">
+                <i class="fa-solid fa-list-check"></i> Individual Key Points
+              </div>
+              <div class="key-points-input-bar">
+                <input type="text" id="newKeyPointInput" class="form-control" placeholder="Type key point and click Add...">
+                <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" id="addKeyPointBtn">
+                  <i class="fa-solid fa-plus"></i> Add
+                </button>
+              </div>
+              <div class="key-points-list" id="modalKeyPointsList">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="pmKeyFindings">Key Findings</label>
+              <textarea id="pmKeyFindings" class="form-control" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pmBusinessImpact">Business Impact / ROI</label>
+              <textarea id="pmBusinessImpact" class="form-control" rows="2"></textarea>
+            </div>
+          </div>
+
+          <!-- URL Inputs with validation & testing -->
+          <div class="form-group">
+            <label class="form-label" for="pmGithubUrl">GitHub Repository URL</label>
+            <div class="input-with-action">
+              <input type="url" id="pmGithubUrl" class="form-control" placeholder="https://github.com/username/repository">
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm test-link-btn" data-target="pmGithubUrl">Test Link</button>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="pmLiveUrl">Live Demo / Notebook URL</label>
+              <div class="input-with-action">
+                <input type="url" id="pmLiveUrl" class="form-control" placeholder="https://demo-site.com">
+                <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm test-link-btn" data-target="pmLiveUrl">Test</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="pmDashboardUrl">Dashboard URL</label>
+              <div class="input-with-action">
+                <input type="url" id="pmDashboardUrl" class="form-control" placeholder="https://app.powerbi.com/...">
+                <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm test-link-btn" data-target="pmDashboardUrl">Test</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label" for="pmDisplayOrder">Display Order</label>
+              <input type="number" id="pmDisplayOrder" class="form-control" value="1" min="1">
+            </div>
+            <div class="form-group" style="display:flex; flex-direction:column; justify-content:center;">
+              <label class="form-label">Featured Project</label>
+              <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                <input type="checkbox" id="pmFeatured" style="width:18px; height:18px;">
+                <span style="font-size:0.88rem; color:#fff;">Feature on Hero / Top</span>
+              </label>
+            </div>
+            <div class="form-group" style="display:flex; flex-direction:column; justify-content:center;">
+              <label class="form-label">Publish Status</label>
+              <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                <input type="checkbox" id="pmIsPublished" checked style="width:18px; height:18px;">
+                <span style="font-size:0.88rem; color:#4ade80;">Published (Visible)</span>
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="admin-modal-footer">
+        <button type="button" class="admin-btn admin-btn-secondary" id="cancelProjectModalBtn">Cancel</button>
+        <button type="button" class="admin-btn admin-btn-primary" id="saveProjectModalBtn">Save Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOGLE DRIVE PICKER SETUP & IMPORT MODAL -->
+  <div class="admin-modal-overlay" id="gdriveModal">
+    <div class="admin-modal-box">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title"><i class="fa-brands fa-google-drive" style="color:#38bdf8;"></i> Google Drive Picker Integration</h3>
+        <button type="button" class="admin-btn-outline" id="closeGdriveModalBtn">&times;</button>
+      </div>
+      <div class="admin-modal-body">
+        <div id="gdriveConfiguredNotice" style="display: none; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem;">
+          <h4 style="color:#4ade80; font-size:0.95rem; margin-bottom:0.25rem;">
+            <i class="fa-solid fa-circle-check"></i> Google Drive Integration Ready
+          </h4>
+          <p style="font-size:0.82rem; color:var(--admin-text-muted);">
+            Click the button below to launch the official Google Picker window and select your document.
+          </p>
+          <button type="button" class="admin-btn admin-btn-primary admin-btn-sm" id="launchPickerNowBtn" style="margin-top: 0.75rem;">
+            <i class="fa-brands fa-google-drive"></i> Open Google Picker
+          </button>
+        </div>
+
+        <div id="gdriveSetupInstructions">
+          <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.5rem;">Google Drive API Configuration Steps:</h4>
+          <p style="font-size: 0.85rem; color: var(--admin-text-muted); line-height: 1.6; margin-bottom: 1rem;">
+            To import documents directly from Google Drive without manual downloading, Google requires an OAuth Client ID and API Key.
+          </p>
+
+          <ol style="font-size: 0.85rem; color: var(--admin-text-muted); line-height: 1.6; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem;">
+            <li>Go to the <a href="https://console.cloud.google.com/" target="_blank" style="color:var(--admin-accent-cyan); text-decoration:underline;">Google Cloud Console</a>.</li>
+            <li>Enable the <strong>Google Drive API</strong> and <strong>Google Picker API</strong>.</li>
+            <li>Create an <strong>OAuth 2.0 Client ID</strong> (Web Application) and authorize <code>http://localhost:3000</code>.</li>
+            <li>Create an <strong>API Key</strong> under Credentials.</li>
+            <li>Add them to your <code>.env</code> file:
+              <pre style="background:#091224; padding:0.6rem; border-radius:6px; margin-top:0.4rem; color:#38bdf8;">GOOGLE_CLIENT_ID=your_client_id.apps.googleusercontent.com
+GOOGLE_API_KEY=your_api_key</pre>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="admin-btn admin-btn-secondary" id="closeGdriveModalFooterBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORK EXPERIENCE EDIT MODAL -->
+  <div class="admin-modal-overlay" id="experienceModal">
+    <div class="admin-modal-box">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="expModalTitle">Add Work Experience</h3>
+        <button type="button" class="admin-btn-outline" id="closeExpModalBtn">&times;</button>
+      </div>
+
+      <div class="admin-modal-body">
+        <form id="experienceModalForm">
+          <input type="hidden" id="expId">
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="expJobTitle">Job Title <span class="req">*</span></label>
+              <input type="text" id="expJobTitle" class="form-control" placeholder="e.g. Data Analyst" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="expCompany">Company Name <span class="req">*</span></label>
+              <input type="text" id="expCompany" class="form-control" placeholder="e.g. Analytics Practice" required>
+            </div>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label" for="expLocation">Location</label>
+              <input type="text" id="expLocation" class="form-control" placeholder="e.g. Bengaluru, India (Hybrid)">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="expStartDate">Start Date</label>
+              <input type="text" id="expStartDate" class="form-control" placeholder="e.g. 2024-02 or Feb 2024">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="expEndDate">End Date</label>
+              <input type="text" id="expEndDate" class="form-control" placeholder="e.g. 2025-01 or Present">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+              <input type="checkbox" id="expIsCurrent" style="width:18px; height:18px;">
+              <span style="font-size:0.88rem; color:#4ade80; font-weight:600;">Currently Working in this Role</span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="expDescription">Role Overview / Summary</label>
+            <textarea id="expDescription" class="form-control" rows="2" placeholder="Brief summary of duties and responsibilities..."></textarea>
+          </div>
+
+          <!-- ACHIEVEMENTS EDITOR -->
+          <div class="form-group">
+            <label class="form-label">Key Achievements & Impact Bullet Points</label>
+            <div class="key-points-manager">
+              <div class="key-points-input-bar">
+                <input type="text" id="newExpAchievementInput" class="form-control" placeholder="Type achievement and click Add...">
+                <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" id="addExpAchievementBtn">
+                  <i class="fa-solid fa-plus"></i> Add
+                </button>
+              </div>
+              <div class="key-points-list" id="expAchievementsList">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="expDisplayOrder">Display Order</label>
+            <input type="number" id="expDisplayOrder" class="form-control" value="1" min="1" style="max-width: 120px;">
+          </div>
+        </form>
+      </div>
+
+      <div class="admin-modal-footer">
+        <button type="button" class="admin-btn admin-btn-secondary" id="cancelExpModalBtn">Cancel</button>
+        <button type="button" class="admin-btn admin-btn-primary" id="saveExpModalBtn">Save Experience</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILL CATEGORY MODAL -->
+  <div class="admin-modal-overlay" id="categoryModal">
+    <div class="admin-modal-box" style="max-width: 500px;">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="catModalTitle">Add Skill Category</h3>
+        <button type="button" class="admin-btn-outline" id="closeCatModalBtn">&times;</button>
+      </div>
+      <div class="admin-modal-body">
+        <form id="categoryModalForm">
+          <input type="hidden" id="cmCategoryId">
+          <div class="form-group">
+            <label class="form-label" for="cmName">Category Name <span class="req">*</span></label>
+            <input type="text" id="cmName" class="form-control" placeholder="e.g. Cloud & Big Data" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cmIcon">Icon (FontAwesome class)</label>
+            <input type="text" id="cmIcon" class="form-control" placeholder="fa-laptop-code" value="fa-laptop-code">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cmAccent">Accent Color</label>
+            <select id="cmAccent" class="form-control">
+              <option value="cyan">Cyan</option>
+              <option value="blue">Blue</option>
+              <option value="indigo">Indigo</option>
+              <option value="purple">Purple</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="admin-btn admin-btn-secondary" id="cancelCatModalBtn">Cancel</button>
+        <button type="button" class="admin-btn admin-btn-primary" id="saveCatModalBtn">Save Category</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INDIVIDUAL SKILL MODAL -->
+  <div class="admin-modal-overlay" id="skillModal">
+    <div class="admin-modal-box" style="max-width: 500px;">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="skillModalTitle">Add Skill</h3>
+        <button type="button" class="admin-btn-outline" id="closeSkillModalBtn">&times;</button>
+      </div>
+      <div class="admin-modal-body">
+        <form id="skillModalForm">
+          <input type="hidden" id="smCategoryId">
+          <input type="hidden" id="smSkillId">
+          <div class="form-group">
+            <label class="form-label" for="smName">Skill / Technology Name <span class="req">*</span></label>
+            <input type="text" id="smName" class="form-control" placeholder="e.g. PostgreSQL" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="smLevel">Proficiency Level</label>
+            <select id="smLevel" class="form-control">
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Proficient" selected>Proficient</option>
+              <option value="Advanced">Advanced</option>
+              <option value="Expert">Expert</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="smIcon">Icon (FontAwesome class)</label>
+            <input type="text" id="smIcon" class="form-control" placeholder="fa-solid fa-database" value="fa-solid fa-code">
+          </div>
+        </form>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="admin-btn admin-btn-secondary" id="cancelSkillModalBtn">Cancel</button>
+        <button type="button" class="admin-btn admin-btn-primary" id="saveSkillModalBtn">Save Skill</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DYNAMIC SOCIAL PROFILE MODAL -->
+  <div class="admin-modal-overlay" id="socialProfileModal">
+    <div class="admin-modal-box" style="max-width: 620px;">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="socialModalTitle">Add Social Profile</h3>
+        <button type="button" class="admin-btn-outline" id="closeSocialModalBtn">&times;</button>
+      </div>
+      <div class="admin-modal-body">
+        <form id="socialProfileForm">
+          <input type="hidden" id="spId">
+
+          <div class="form-group">
+            <label class="form-label" for="spPlatform">Platform Name <span class="req">*</span></label>
+            <input type="text" id="spPlatform" class="form-control" placeholder="e.g. Kaggle, Tableau Public, LeetCode" required>
+            <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.45rem;">
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" style="font-size:0.75rem; padding:0.15rem 0.5rem;" onclick="window.adminApp.setSocialPreset('LinkedIn', 'fa-brands fa-linkedin-in', '#0a66c2', 'View LinkedIn Profile')">LinkedIn</button>
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" style="font-size:0.75rem; padding:0.15rem 0.5rem;" onclick="window.adminApp.setSocialPreset('GitHub', 'fa-brands fa-github', '#2ea44f', 'Explore GitHub Profile')">GitHub</button>
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" style="font-size:0.75rem; padding:0.15rem 0.5rem;" onclick="window.adminApp.setSocialPreset('Kaggle', 'fa-brands fa-kaggle', '#20beff', 'View Kaggle Notebooks')">Kaggle</button>
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" style="font-size:0.75rem; padding:0.15rem 0.5rem;" onclick="window.adminApp.setSocialPreset('Tableau Public', 'fa-solid fa-chart-column', '#e97627', 'View Tableau Dashboards')">Tableau</button>
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" style="font-size:0.75rem; padding:0.15rem 0.5rem;" onclick="window.adminApp.setSocialPreset('LeetCode', 'fa-solid fa-code', '#f59e0b', 'View LeetCode Profile')">LeetCode</button>
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" style="font-size:0.75rem; padding:0.15rem 0.5rem;" onclick="window.adminApp.setSocialPreset('Medium', 'fa-brands fa-medium', '#00ab6c', 'Read Articles on Medium')">Medium</button>
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" style="font-size:0.75rem; padding:0.15rem 0.5rem;" onclick="window.adminApp.setSocialPreset('Personal Website', 'fa-solid fa-globe', '#38bdf8', 'Visit Personal Website')">Website</button>
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" style="font-size:0.75rem; padding:0.15rem 0.5rem;" onclick="window.adminApp.setSocialPreset('YouTube', 'fa-brands fa-youtube', '#ef4444', 'Watch on YouTube')">YouTube</button>
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" style="font-size:0.75rem; padding:0.15rem 0.5rem;" onclick="window.adminApp.setSocialPreset('X / Twitter', 'fa-brands fa-x-twitter', '#cbd5e1', 'Follow on X')">X / Twitter</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="spUrl">Profile URL <span class="req">*</span></label>
+            <div class="input-with-action">
+              <input type="url" id="spUrl" class="form-control" placeholder="https://..." required>
+              <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" id="spTestLinkBtn">Test</button>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="spIcon">Icon (FontAwesome Class)</label>
+              <div class="input-with-action">
+                <input type="text" id="spIcon" class="form-control" placeholder="fa-brands fa-github" value="fa-solid fa-link">
+                <span id="spIconPreview" style="display:flex; align-items:center; justify-content:center; width:38px; height:38px; background:rgba(9,17,34,0.8); border:1px solid var(--admin-border); border-radius:8px; color:var(--admin-accent-cyan);">
+                  <i class="fa-solid fa-link"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="spAccent">Accent Color</label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="color" id="spAccentPicker" value="#06b6d4" style="width: 40px; height: 38px; border: none; border-radius: 8px; cursor: pointer; background: transparent;">
+                <input type="text" id="spAccent" class="form-control" placeholder="#06b6d4" value="#06b6d4">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="spDescription">Card Description</label>
+            <textarea id="spDescription" class="form-control" rows="2" placeholder="Brief summary of what visitors will find on this profile..."></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="spButtonLabel">Button Label</label>
+              <input type="text" id="spButtonLabel" class="form-control" placeholder="e.g. View Profile">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="spDisplayOrder">Display Order</label>
+              <input type="number" id="spDisplayOrder" class="form-control" min="1" value="1">
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem;">
+            <input type="checkbox" id="spIsEnabled" checked style="width: 18px; height: 18px; accent-color: var(--admin-accent-cyan); cursor: pointer;">
+            <label for="spIsEnabled" style="font-size: 0.88rem; color: #fff; cursor: pointer;">
+              Visible on Public Website (Only enabled profiles with valid URLs are rendered publicly)
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="admin-btn admin-btn-secondary" id="cancelSocialModalBtn">Cancel</button>
+        <button type="button" class="admin-btn admin-btn-primary" id="saveSocialProfileBtn">Save Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENQUIRY DETAIL MODAL -->
+  <div class="admin-modal-overlay" id="enquiryDetailModal">
+    <div class="admin-modal-box" style="max-width: 680px;">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">
+          <i class="fa-solid fa-envelope-open-text" style="color:var(--admin-accent-cyan);"></i> Contact Enquiry Details
+        </h3>
+        <button type="button" class="admin-btn-outline" id="closeEnquiryModalBtn">&times;</button>
+      </div>
+      <div class="admin-modal-body">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem; background:rgba(9,17,34,0.6); border:1px solid var(--admin-border); border-radius:10px; padding:1rem;">
+          <div>
+            <div style="font-size:1.15rem; font-weight:700; color:#fff;" id="modalEnqName">Sender Name</div>
+            <div style="font-size:0.9rem; color:var(--admin-accent-cyan); margin-top:0.2rem;">
+              <i class="fa-solid fa-envelope"></i> <a href="#" id="modalEnqEmailLink" style="color:inherit; text-decoration:none;"></a>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div id="modalEnqStatusBadge" class="status-badge">Unread</div>
+            <div style="font-size:0.78rem; color:var(--admin-text-dim); margin-top:0.35rem;" id="modalEnqDate">Timestamp</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--admin-text-dim); font-weight: 700;">Subject</label>
+          <div id="modalEnqSubject" style="font-size: 1.05rem; font-weight: 600; color: #fff; margin-top: 0.25rem;"></div>
+        </div>
+
+        <div>
+          <label style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--admin-text-dim); font-weight: 700;">Message</label>
+          <div id="modalEnqMessage" style="margin-top: 0.35rem; padding: 1.15rem; background: rgba(9,17,34,0.8); border: 1px solid var(--admin-border); border-radius: 10px; color: #f1f5f9; line-height: 1.7; white-space: pre-wrap; font-size: 0.95rem; max-height: 300px; overflow-y: auto;"></div>
+        </div>
+      </div>
+      <div class="admin-modal-footer" style="justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <a href="#" class="admin-btn admin-btn-primary admin-btn-sm" id="modalEnqReplyBtn" target="_blank">
+            <i class="fa-solid fa-reply"></i> Reply via Email
+          </a>
+          <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" id="modalEnqToggleReadBtn">
+            <i class="fa-solid fa-envelope-open"></i> Mark as Read
+          </button>
+          <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" id="modalEnqArchiveBtn">
+            <i class="fa-solid fa-box-archive"></i> Archive
+          </button>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button type="button" class="admin-btn admin-btn-danger admin-btn-sm" id="modalEnqDeleteBtn">
+            <i class="fa-solid fa-trash"></i> Delete
+          </button>
+          <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" id="closeEnquiryModalFooterBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="admin-toast-container" id="adminToastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/admin.js"></script>
+</body>
+</html>

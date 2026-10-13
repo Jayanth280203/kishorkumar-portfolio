@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="metaPageTitle">Kishor Kumar | Data Analyst</title>
+  
+  <!-- SEO & Social Meta Tags (Dynamically updated from CMS) -->
+  <meta name="description" id="metaDescription" content="Kishor Kumar - Data Analyst with 2+ years of experience in SQL, Python, Power BI, Advanced Excel, data cleaning, EDA, business insights, and automated reporting.">
+  <meta name="keywords" id="metaKeywords" content="Data Analyst, Kishor Kumar, SQL, Python, Power BI, DAX, Excel, Data Cleaning, EDA, Business Intelligence, Data Visualization">
+  <meta name="author" content="Kishor Kumar">
+  <meta name="theme-color" content="#070c18">
+  
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" id="ogTitle" content="Kishor Kumar | Data Analyst Portfolio">
+  <meta property="og:description" id="ogDesc" content="Explore data analytics projects, SQL analysis, Python notebooks, and Power BI dashboards built by Kishor Kumar.">
+  <meta property="og:image" id="ogImage" content="assets/profile.jpg">
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons (CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ==============================================================================
+       STICKY NAVIGATION BAR
+       ============================================================================== -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container">
+      <!-- Brand Logo / Avatar with Dropdown Menu -->
+      <div class="nav-brand-wrap" id="navBrandWrap">
+        <button type="button" class="nav-brand-btn" id="navBrandBtn" aria-expanded="false" aria-label="Open Navigation & Settings Menu">
+          <div class="nav-brand-badge" id="navLogoBadge">KK</div>
+          <div class="nav-brand-title">
+            <span class="nav-brand-name" id="navBrandName">Kishor Kumar</span>
+            <span class="nav-brand-role" id="navBrandRole">Data Analyst</span>
+          </div>
+          <i class="fa-solid fa-chevron-down chevron"></i>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div class="nav-dropdown-menu" id="navBrandDropdown">
+          <a href="#home" class="nav-dropdown-item" id="menuItemPortfolio">
+            <i class="fa-solid fa-house"></i> View Portfolio
+          </a>
+          <button type="button" class="nav-dropdown-item" id="menuItemSettings">
+            <i class="fa-solid fa-sliders"></i> Appearance Settings
+          </button>
+          <div class="nav-dropdown-divider"></div>
+          <!-- Admin mode toggle (switches between Login and Dashboard based on JWT) -->
+          <button type="button" class="nav-dropdown-item" id="menuItemAdminLogin">
+            <i class="fa-solid fa-shield-halved"></i> Admin Login
+          </button>
+          <a href="/admin" class="nav-dropdown-item" id="menuItemAdminDashboard" style="display: none;">
+            <i class="fa-solid fa-gauge-high"></i> Admin Dashboard
+          </a>
+          <button type="button" class="nav-dropdown-item danger" id="menuItemAdminLogout" style="display: none;">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Desktop & Mobile Menu -->
+      <nav class="nav-menu" id="navMenu">
+        <a href="#home" class="nav-link active" id="navLinkHome">Home</a>
+        <a href="#about" class="nav-link" id="navLinkAbout">About</a>
+        <a href="#experience" class="nav-link" id="navLinkExperience">Experience</a>
+        <a href="#skills" class="nav-link" id="navLinkSkills">Skills</a>
+        <a href="#projects" class="nav-link" id="navLinkProjects">Projects</a>
+        <a href="#dashboards" class="nav-link" id="navLinkDashboards">Dashboards</a>
+        <a href="#resume" class="nav-link" id="navLinkResume">Resume</a>
+        <a href="#contact" class="nav-link" id="navLinkContact">Contact</a>
+      </nav>
+
+      <!-- Nav CTA Button & Mobile Toggle -->
+      <div class="nav-actions">
+        <a href="#contact" class="btn btn-primary btn-sm" id="navCtaBtn">
+          <i class="fa-solid fa-paper-plane"></i> Let's Talk
+        </a>
+        <div class="nav-toggle" id="navToggle" aria-label="Toggle Navigation Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==============================================================================
+         1. HERO / PROFILE SECTION
+         ============================================================================== -->
+    <section class="section hero-section" id="home">
+      <div class="container hero-wrapper">
+        
+        <!-- Profile Photo -->
+        <div class="profile-photo-wrapper">
+          <div class="profile-photo-ring">
+            <div class="profile-photo-inner">
+              <img id="heroProfileImg" class="profile-photo-img" alt="Kishor Kumar Profile Photo">
+              <div id="heroAvatarFallback" class="profile-avatar-fallback">
+                <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Availability Badge -->
+        <div class="hero-status-badge">
+          <span class="hero-status-dot"></span>
+          <span id="heroStatusText">Open to Data Analyst Opportunities</span>
+        </div>
+
+        <!-- Name & Title -->
+        <h1 class="hero-name" id="heroName">Kishor Kumar</h1>
+        <div class="hero-title-role" id="heroTitle">
+          <i class="fa-solid fa-chart-pie"></i> Data Analyst
+        </div>
+
+        <!-- Short Professional Introduction -->
+        <p class="hero-description" id="heroDescription">
+          Data Analyst with 2+ years of experience in data analysis, reporting, business insights, and process automation. Skilled in SQL, Python, Power BI, Excel, data visualization, data cleaning, and exploratory data analysis. Passionate about transforming raw data into meaningful business insights and actionable decisions.
+        </p>
+
+        <!-- Competency Chips -->
+        <div class="hero-chips-bar" id="heroChipsBar">
+          <span class="hero-chip"><i class="fa-solid fa-database"></i> SQL & PostgreSQL</span>
+          <span class="hero-chip"><i class="fa-brands fa-python"></i> Python & Pandas</span>
+          <span class="hero-chip"><i class="fa-solid fa-chart-column"></i> Power BI & DAX</span>
+          <span class="hero-chip"><i class="fa-solid fa-file-excel"></i> Advanced Excel</span>
+          <span class="hero-chip"><i class="fa-solid fa-bolt"></i> Process Automation</span>
+        </div>
+
+        <!-- Hero CTA Buttons -->
+        <div class="hero-cta-buttons">
+          <a href="#projects" class="btn btn-primary btn-lg" id="heroBtnProjects">
+            <i class="fa-solid fa-diagram-project"></i> View Projects
+          </a>
+          <a href="#" class="btn btn-secondary btn-lg" id="heroBtnGithub" style="display:none;">
+            <i class="fa-brands fa-github"></i> GitHub
+          </a>
+          <a href="#" class="btn btn-secondary btn-lg" id="heroBtnLinkedin" style="display:none;">
+            <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+          </a>
+          <a href="#resume" class="btn btn-outline btn-lg" id="heroBtnResume">
+            <i class="fa-solid fa-file-arrow-down"></i> Download Resume
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         2. ABOUT ME SECTION
+         ============================================================================== -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag"><i class="fa-solid fa-user"></i> Professional Background</span>
+          <h2 class="section-title">About <span>Me</span></h2>
+          <p class="section-subtitle" id="aboutSubtitle">A data-driven problem solver connecting raw data to strategic executive decisions.</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-card-main">
+            <h3 class="about-lead" id="aboutLead">Turning Complex Data into Strategic Business Decisions</h3>
+            <div class="about-body" id="aboutBody">
+              <!-- Dynamically rendered -->
+            </div>
+
+            <!-- Key Feature Boxes -->
+            <div class="about-highlights-grid" id="aboutHighlights">
+              <!-- Dynamically rendered -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Metrics & Stats Counter Banner -->
+        <div class="stats-banner" id="aboutStatsBanner">
+          <!-- Dynamically rendered -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         3. PROFESSIONAL EXPERIENCE SECTION
+         ============================================================================== -->
+    <section class="section" id="experience">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag"><i class="fa-solid fa-briefcase"></i> Career Journey</span>
+          <h2 class="section-title">Professional <span>Experience</span></h2>
+          <p class="section-subtitle">Commercial track record delivering data analysis, automated reporting pipelines, and business insights.</p>
+        </div>
+
+        <div id="experienceTimelineContainer" style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <!-- Dynamically populated from CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         4. SKILLS SECTION
+         ============================================================================== -->
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag"><i class="fa-solid fa-screwdriver-wrench"></i> Core Expertise</span>
+          <h2 class="section-title">Technical & <span>Analytical Skills</span></h2>
+          <p class="section-subtitle">Proficiencies in modern data querying, statistical exploration, business intelligence, and automated reporting.</p>
+        </div>
+
+        <div class="skills-grid" id="skillsGrid">
+          <!-- Dynamically rendered -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         5. PROJECTS SECTION
+         ============================================================================== -->
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag"><i class="fa-solid fa-folder-open"></i> Portfolio Case Studies</span>
+          <h2 class="section-title">Featured <span>Data Projects</span></h2>
+          <p class="section-subtitle">Real-world business analytics projects solving retail, banking, logistics, and workforce challenges.</p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="projects-filter-bar" id="projectsFilterBar">
+          <button type="button" class="filter-btn active" data-filter="all">All Projects</button>
+          <button type="button" class="filter-btn" data-filter="python">
+            <i class="fa-brands fa-python"></i> Python Analytics
+          </button>
+          <button type="button" class="filter-btn" data-filter="sql">
+            <i class="fa-solid fa-database"></i> SQL Intelligence
+          </button>
+          <button type="button" class="filter-btn" data-filter="power bi">
+            <i class="fa-solid fa-chart-column"></i> Power BI
+          </button>
+        </div>
+
+        <!-- Project Cards Grid -->
+        <div class="projects-grid" id="projectsGrid">
+          <!-- Dynamically rendered from CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         6. GITHUB BANNER SECTION (Prominent Card)
+         ============================================================================== -->
+    <section class="section" style="padding-top: 1rem; padding-bottom: 3.5rem;">
+      <div class="container">
+        <div class="github-banner-card">
+          <div class="github-banner-inner">
+            <div class="github-banner-content">
+              <span class="github-banner-tag" id="githubBannerTag">
+                <i class="fa-brands fa-github"></i> Open Source & Code Repositories
+              </span>
+              <h2 class="github-banner-title" id="githubBannerTitle">Explore My GitHub Projects</h2>
+              <p class="github-banner-desc" id="githubBannerDesc">
+                Explore my data analytics projects, SQL analysis, Python notebooks, dashboards, and data-driven solutions.
+              </p>
+              <div class="github-banner-features" id="githubBannerFeatures">
+                <div class="gh-feature-item"><i class="fa-solid fa-circle-check"></i> Clean, documented SQL scripts</div>
+                <div class="gh-feature-item"><i class="fa-solid fa-circle-check"></i> Reproducible Jupyter Notebooks</div>
+                <div class="gh-feature-item"><i class="fa-solid fa-circle-check"></i> EDA & Visualizations</div>
+              </div>
+            </div>
+            <div class="github-banner-action">
+              <a href="#" class="btn btn-primary btn-lg" id="githubBannerBtn">
+                <i class="fa-brands fa-github"></i> Explore GitHub Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         7. POWER BI SECTION (Dashboards)
+         ============================================================================== -->
+    <section class="section" id="dashboards">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag"><i class="fa-solid fa-chart-column"></i> Business Intelligence</span>
+          <h2 class="section-title">Power BI <span>Dashboards</span></h2>
+          <p class="section-subtitle">Interactive analytical dashboards built with DAX, star schemas, dynamic filters, and executive KPIs.</p>
+        </div>
+
+        <div class="dashboards-grid" id="dashboardsGrid">
+          <!-- Dynamically rendered from CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         8. RESUME SECTION
+         ============================================================================== -->
+    <section class="section" id="resume">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag"><i class="fa-solid fa-file-lines"></i> Curriculum Vitae</span>
+          <h2 class="section-title" id="resumeSecTitle">Professional <span>Resume</span></h2>
+          <p class="section-subtitle" id="resumeSecSubtitle">Comprehensive breakdown of technical capabilities, projects, and commercial impact.</p>
+        </div>
+
+        <div class="resume-card">
+          <div class="resume-header-row">
+            <div class="resume-header-info">
+              <h3 id="resumeHeaderName">Kishor Kumar</h3>
+              <p><i class="fa-solid fa-chart-line" style="color:var(--accent-cyan);"></i> Data Analyst • 2+ Years Commercial Experience</p>
+            </div>
+            <div class="resume-buttons-group">
+              <a href="/api/resume/download" class="btn btn-primary btn-lg" id="resumeDownloadBtn" download>
+                <i class="fa-solid fa-download"></i> <span id="lblDownloadResume">Download Resume</span>
+              </a>
+              <a href="/api/resume/preview" class="btn btn-secondary btn-lg" id="resumeViewBtn" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-eye"></i> <span id="lblViewResume">View Resume</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="resume-details-grid">
+            <div class="resume-detail-box">
+              <h4><i class="fa-solid fa-star"></i> Core Value Proposition</h4>
+              <div class="resume-points-list" id="resumePointsList">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+
+            <div class="resume-detail-box">
+              <h4><i class="fa-solid fa-graduation-cap"></i> Education & Focus</h4>
+              <div class="resume-points-list">
+                <div class="resume-point-item">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <span>Specialized coursework in Relational Database Management & SQL Optimization.</span>
+                </div>
+                <div class="resume-point-item">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <span>Applied Statistics, Probability Distributions & Exploratory Data Analysis.</span>
+                </div>
+                <div class="resume-point-item">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <span>Data Warehousing principles, ETL workflows, and Business Intelligence modeling.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="resume-footer-note">
+            <span><i class="fa-solid fa-file-circle-check" style="color:var(--accent-cyan);"></i> Latest verified resume available for immediate review</span>
+            <span><i class="fa-solid fa-circle-check" style="color:#4ade80;"></i> Updated for 2026</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         9. PROFESSIONAL PROFILES SECTION
+         ============================================================================== -->
+    <section class="section" id="profiles">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag"><i class="fa-solid fa-network-wired"></i> Digital Footprint</span>
+          <h2 class="section-title">Professional <span>Profiles</span></h2>
+          <p class="section-subtitle">Connect with me across technical platforms, developer networks, and professional communities.</p>
+        </div>
+
+        <div class="profiles-grid" id="profilesGrid">
+          <!-- Dynamically rendered from CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         10. CONTACT SECTION
+         ============================================================================== -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag" id="contactTag"><i class="fa-solid fa-handshake"></i> Let's Connect</span>
+          <h2 class="section-title" id="contactHeading">Get in <span>Touch</span></h2>
+          <p class="section-subtitle" id="contactSubtitle">Have a data analyst role or analytical problem to solve? I'd love to discuss how I can help.</p>
+        </div>
+
+        <div class="contact-grid">
+          <!-- Contact Direct Details -->
+          <div class="contact-info-card">
+            <div>
+              <h3 class="contact-info-title" id="contactInfoTitle">Let's Connect</h3>
+              <p class="contact-info-desc" id="contactInfoDesc">
+                I am actively seeking Data Analyst opportunities where I can apply my SQL, Python, and Power BI skills to drive real business value.
+              </p>
+
+              <div class="contact-methods-list">
+                <a href="#" class="contact-method-item" id="contactEmailItem" style="text-decoration:none;">
+                  <div class="contact-method-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                  </div>
+                  <div class="contact-method-details">
+                    <span class="contact-method-label" id="contactEmailLbl">Direct Email</span>
+                    <span class="contact-method-value" id="contactEmailVal">Contact via Form</span>
+                  </div>
+                </a>
+
+                <div class="contact-method-item" id="contactLinkedinItem">
+                  <div class="contact-method-icon">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                  </div>
+                  <div class="contact-method-details">
+                    <span class="contact-method-label" id="contactLinkedinLbl">LinkedIn</span>
+                    <span class="contact-method-value" id="contactLinkedinVal">Connected Profile</span>
+                  </div>
+                </div>
+
+                <div class="contact-method-item" id="contactGithubItem">
+                  <div class="contact-method-icon">
+                    <i class="fa-brands fa-github"></i>
+                  </div>
+                  <div class="contact-method-details">
+                    <span class="contact-method-label" id="contactGithubLbl">GitHub</span>
+                    <span class="contact-method-value" id="contactGithubVal">Active Repositories</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="font-size: 0.85rem; color: var(--text-dim); display:flex; align-items:center; gap:0.5rem;" id="contactLocationText">
+              <i class="fa-solid fa-location-dot" style="color:var(--accent-cyan);"></i> Open to Remote, Hybrid, & Relocation Opportunities
+            </div>
+          </div>
+
+          <!-- Contact Quick Message Form -->
+          <div class="contact-form-card">
+            <div id="contactFormAlert" style="display: none; padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: 0.88rem; align-items: center; gap: 0.6rem;"></div>
+            <form id="contactForm">
+              <!-- Honeypot anti-spam trap (invisible to human visitors) -->
+              <div style="display: none;" aria-hidden="true">
+                <input type="text" id="formHoneypot" name="company_website_hp" tabindex="-1" autocomplete="off">
+              </div>
+
+              <div class="form-group">
+                <label for="formName" class="form-label">Your Name</label>
+                <input type="text" id="formName" class="form-control" placeholder="e.g. Sarah Jenkins" required minlength="2" maxlength="100">
+              </div>
+
+              <div class="form-group">
+                <label for="formEmail" class="form-label">Your Email</label>
+                <input type="email" id="formEmail" class="form-control" placeholder="e.g. sarah@company.com" required>
+              </div>
+
+              <div class="form-group">
+                <label for="formSubject" class="form-label">Subject</label>
+                <input type="text" id="formSubject" class="form-control" placeholder="e.g. Data Analyst Role / Business Project Inquiry" required minlength="2" maxlength="200">
+              </div>
+
+              <div class="form-group">
+                <label for="formMessage" class="form-label">Message / Inquiry</label>
+                <textarea id="formMessage" class="form-control" rows="4" placeholder="Hi Kishor, we have an open Data Analyst role and would love to review your work..." required minlength="10" maxlength="5000"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="contactSubmitBtn">
+                <i class="fa-solid fa-paper-plane"></i> Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==============================================================================
+       FOOTER
+       ============================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-brand-name" id="footerBrandName">Kishor Kumar</span>
+          <span class="footer-brand-title" id="footerBrandTitle">Data Analyst Portfolio</span>
+        </div>
+        <div class="footer-nav">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#experience">Experience</a>
+          <a href="#skills">Skills</a>
+          <a href="#projects">Projects</a>
+          <a href="#dashboards">Dashboards</a>
+          <a href="#resume">Resume</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span id="footerCopyrightText">&copy; 2026 Kishor Kumar. All rights reserved.</span>
+        <span id="footerTaglineText">Crafted with clean HTML, CSS & JavaScript for high performance.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button type="button" class="back-to-top" id="backToTopBtn" aria-label="Back to Top">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <!-- ==============================================================================
+       ADMIN LOGIN MODAL (In-page unified editor access)
+       ============================================================================== -->
+  <div class="public-modal-overlay" id="publicAdminLoginModal">
+    <div class="public-modal-box">
+      <div class="public-modal-header">
+        <h3 class="public-modal-title">
+          <i class="fa-solid fa-shield-halved" style="color: var(--accent-cyan);"></i> Admin Editor Access
+        </h3>
+        <button type="button" class="public-modal-close" id="closePublicLoginBtn">&times;</button>
+      </div>
+      <div class="public-modal-body">
+        <div class="login-alert error" id="publicLoginAlert" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 0.75rem 1rem; color: #f87171; font-size: 0.85rem; margin-bottom: 1rem; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span id="publicLoginAlertText">Invalid credentials.</span>
+        </div>
+        <form id="publicLoginForm">
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label" for="pubLoginEmail" style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem;">Administrator Email</label>
+            <input type="email" id="pubLoginEmail" class="form-control" placeholder="kishorsk1702@gmail.com" required autocomplete="username" style="width: 100%; padding: 0.75rem 1rem; border-radius: 10px; background: rgba(11, 20, 39, 0.8); border: 1px solid var(--border-light); color: #fff; font-size: 0.95rem;">
+          </div>
+          <div class="form-group" style="margin-bottom: 1.25rem;">
+            <label class="form-label" for="pubLoginPassword" style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem;">Administrator Password</label>
+            <input type="password" id="pubLoginPassword" class="form-control" placeholder="••••••••••••" required autocomplete="current-password" style="width: 100%; padding: 0.75rem 1rem; border-radius: 10px; background: rgba(11, 20, 39, 0.8); border: 1px solid var(--border-light); color: #fff; font-size: 0.95rem;">
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" id="pubLoginSubmitBtn" style="width: 100%;">
+            <i class="fa-solid fa-lock-open"></i> Sign In to CMS
+          </button>
+        </form>
+      </div>
+      <div class="public-modal-footer" style="justify-content: center; font-size: 0.78rem; color: var(--text-dim); text-align: center;">
+        <i class="fa-solid fa-lock"></i> Session secured with httpOnly cookie.
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       APPEARANCE SETTINGS MODAL
+       ============================================================================== -->
+  <div class="public-modal-overlay" id="publicSettingsModal">
+    <div class="public-modal-box">
+      <div class="public-modal-header">
+        <h3 class="public-modal-title">
+          <i class="fa-solid fa-sliders" style="color: var(--accent-cyan);"></i> Appearance Settings
+        </h3>
+        <button type="button" class="public-modal-close" id="closePublicSettingsBtn">&times;</button>
+      </div>
+      <div class="public-modal-body">
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          Customize the interactive theme for your device:
+        </p>
+
+        <label style="display: block; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.6rem;">Accent Theme</label>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1.5rem;">
+          <button type="button" class="theme-accent-btn" data-accent="cyan" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 0.85rem; border-radius: 10px; background: rgba(6, 182, 212, 0.12); border: 1px solid rgba(6, 182, 212, 0.4); color: #fff; font-size: 0.85rem; cursor: pointer;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #06b6d4; display: inline-block;"></span> Cyan (Default)
+          </button>
+          <button type="button" class="theme-accent-btn" data-accent="blue" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 0.85rem; border-radius: 10px; background: rgba(37, 99, 235, 0.12); border: 1px solid rgba(37, 99, 235, 0.4); color: #fff; font-size: 0.85rem; cursor: pointer;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #3b82f6; display: inline-block;"></span> Electric Blue
+          </button>
+          <button type="button" class="theme-accent-btn" data-accent="indigo" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 0.85rem; border-radius: 10px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.4); color: #fff; font-size: 0.85rem; cursor: pointer;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #6366f1; display: inline-block;"></span> Royal Indigo
+          </button>
+          <button type="button" class="theme-accent-btn" data-accent="emerald" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 0.85rem; border-radius: 10px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); color: #fff; font-size: 0.85rem; cursor: pointer;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #10b981; display: inline-block;"></span> Emerald Metric
+          </button>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-light); padding-top: 1rem;">
+          <span style="font-size: 0.78rem; color: var(--text-dim); display: block;">Theme preferences are saved locally on your browser.</span>
+        </div>
+      </div>
+      <div class="public-modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" id="closePublicSettingsFooterBtn">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts: Fallback config + Upgraded App Engine -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
