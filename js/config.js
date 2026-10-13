@@ -29,20 +29,20 @@ const portfolioConfig = {
     availability: "Available for Data Analyst Roles",
     
     // Path to your profile photo (leave empty "" to use the interactive uploader or fallback avatar)
-    photo: "", 
+    photo: "/uploads/images/1791877477102_WhatsApp_Image_2026-10-13_at_11_58_49.jpeg", 
     
     // Professional Summary (Used across Hero and meta tags)
     shortDescription: "Data Analyst with 2+ years of experience in data analysis, reporting, business insights, and process automation. Skilled in SQL, Python, Power BI, Excel, data visualization, data cleaning, and exploratory data analysis. Passionate about transforming raw data into meaningful business insights and actionable decisions.",
     
     // Contact & Profile Links (Enter your real links here)
-    email: "",                // e.g. "kishor.analyst@example.com"
-    github: "",               // e.g. "https://github.com/kishorkumar"
-    linkedin: "",             // e.g. "https://linkedin.com/in/kishorkumar"
-    medium: "",               // e.g. "https://medium.com/@kishorkumar"
-    website: "",              // e.g. "https://kishorkumar.dev"
+    email: "kishorsk1702@gmail.com",
+    github: "https://github.com/kishor1702",
+    linkedin: "https://www.linkedin.com/in/kishor-kumar-s-68b087245",
+    medium: "",
+    website: "",
     
     // Resume File or Link
-    resumeUrl: "assets/Kishor_Kumar_Resume.pdf"
+    resumeUrl: "/uploads/resumes/1791872844619_Kishor_Kumar_S_CV.pdf"
   },
 
   // ----------------------------------------------------------------------------
@@ -175,7 +175,7 @@ const portfolioConfig = {
         "What credit score bands represent the optimum trade-off between volume and default risk?",
         "Which sub-grade loans require stricter underwriting criteria to mitigate loss?"
       ],
-      githubUrl: "",
+      githubUrl: "https://github.com/kishor1702/loan-default-risk-analytics/blob/main/python/02_load_home_credit.py",
       liveUrl: ""
     },
     {
@@ -350,9 +350,9 @@ const portfolioConfig = {
   // 7. Resume Highlights (Displayed alongside download/view buttons)
   // ----------------------------------------------------------------------------
   resumeData: {
-    fileName: "Kishor_Kumar_Data_Analyst_Resume.pdf",
-    filePath: "assets/Kishor_Kumar_Resume.pdf", // Configurable path
-    viewUrl: "", // If you have a Google Drive or cloud link, paste here (optional, falls back to filePath)
+    fileName: "Kishor_Kumar_S_CV.pdf",
+    filePath: "/uploads/resumes/1791872844619_Kishor_Kumar_S_CV.pdf", // Configurable path
+    viewUrl: "/api/resume/preview", // Cloud preview endpoint, falls back to filePath
     lastUpdated: "Updated for 2026",
     summaryTitle: "Ready to Add Immediate Data Value",
     summaryPoints: [

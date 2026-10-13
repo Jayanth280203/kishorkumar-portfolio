@@ -116,15 +116,18 @@ app.use((err, req, res, next) => {
 });
 
 // ------------------------------------------------------------------------------
-// Start Server
+// Start Server (Standalone mode only; skipped when imported by serverless handlers or test suites)
 // ------------------------------------------------------------------------------
-const server = app.listen(PORT, () => {
-  console.log(`==========================================================`);
-  console.log(` Kishor Kumar Data Analyst Portfolio & Admin CMS Server`);
-  console.log(` Public Website : http://localhost:${PORT}`);
-  console.log(` Admin Dashboard: http://localhost:${PORT}/admin`);
-  console.log(` Admin Identity : ${process.env.ADMIN_EMAIL || 'admin@kishorkumar.dev'}`);
-  console.log(`==========================================================`);
-});
+let server = null;
+if (require.main === module) {
+  server = app.listen(PORT, () => {
+    console.log(`==========================================================`);
+    console.log(` Kishor Kumar Data Analyst Portfolio & Admin CMS Server`);
+    console.log(` Public Website : http://localhost:${PORT}`);
+    console.log(` Admin Dashboard: http://localhost:${PORT}/admin`);
+    console.log(` Admin Identity : ${process.env.ADMIN_EMAIL || 'admin@kishorkumar.dev'}`);
+    console.log(`==========================================================`);
+  });
+}
 
 module.exports = { app, server };
