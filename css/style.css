@@ -2092,6 +2092,19 @@ textarea.form-control {
   .resume-buttons-group .btn {
     width: 100%;
   }
+
+  .public-modal-overlay {
+    padding: 1rem;
+  }
+
+  .public-modal-body {
+    padding: 1.25rem 1rem;
+  }
+
+  .public-modal-header,
+  .public-modal-footer {
+    padding: 1rem;
+  }
 }
 
 /* ==============================================================================

@@ -1514,6 +1514,16 @@
   "lastPublished": "2026-10-13T09:41:12.072Z",
   "enquiries": [
     {
+      "id": "enq-1793077227073",
+      "name": "Sarah Jenkins (Talent Acquisition)",
+      "email": "sarah.j@innovatetech.com",
+      "subject": "Senior Data Analyst Role - Interview Request",
+      "message": "Hello Kishor, We were thoroughly impressed by your portfolio projects and would like to invite you for an interview.",
+      "status": "unread",
+      "createdAt": "2026-10-27T05:00:27.075Z",
+      "readAt": null
+    },
+    {
       "id": "enq-1791881907817",
       "name": "kishor",
       "email": "kishorkumarsk1702@gmail.com",

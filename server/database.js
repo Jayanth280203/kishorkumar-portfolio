@@ -844,7 +844,7 @@ class PortfolioDatabase {
     const item = this.data.media.find(m => m.id === mediaId);
     if (!item) return false;
 
-    if (item.path) {
+    if (item.path && item.path.startsWith('uploads/')) {
       const fullPath = path.join(__dirname, '..', item.path);
       if (fs.existsSync(fullPath)) {
         try { fs.unlinkSync(fullPath); } catch (e) { console.warn('Could not unlink media file:', e); }

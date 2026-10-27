@@ -30,22 +30,55 @@ const enquiryRoutes = require('./server/routes/enquiry.routes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Disable fingerprinting header
+app.disable('x-powered-by');
+
 // ------------------------------------------------------------------------------
 // Core Middleware
 // ------------------------------------------------------------------------------
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 app.use(cookieParser());
+
+// Secure CORS configuration
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim())
+  : null;
+
 app.use(cors({
-  origin: true,
+  origin: (origin, callback) => {
+    // Allow server-to-server, curl, and same-origin requests without Origin header
+    if (!origin) return callback(null, true);
+
+    const isLocalhost = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+    if (process.env.NODE_ENV !== 'production' && isLocalhost) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins && allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Default to same-host origin in production if no explicit origin whitelist configured
+    if (!allowedOrigins && isLocalhost) {
+      return callback(null, true);
+    }
+
+    callback(null, false);
+  },
   credentials: true
 }));
 
-// Security headers
+// Comprehensive Security Headers
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://accounts.google.com https://apis.google.com; frame-src 'self' https://accounts.google.com;"
+  );
   next();
 });
 

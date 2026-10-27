@@ -36,7 +36,7 @@ router.get('/skills', requireAdmin, (req, res) => {
 // ------------------------------------------------------------------------------
 router.post('/skills/category', requireAdmin, (req, res) => {
   try {
-    const { category, icon, accent } = req.body;
+    const { category, icon, accent } = req.body || {};
     if (!category || category.trim() === '') {
       return res.status(400).json({ success: false, error: 'Category name is required.' });
     }
@@ -77,7 +77,7 @@ router.put('/skills/category/:categoryId', requireAdmin, (req, res) => {
       return res.status(404).json({ success: false, error: 'Skill category not found.' });
     }
 
-    const { category, icon, accent } = req.body;
+    const { category, icon, accent } = req.body || {};
     if (category !== undefined) {
       if (category.trim() === '') {
         return res.status(400).json({ success: false, error: 'Category name cannot be empty.' });

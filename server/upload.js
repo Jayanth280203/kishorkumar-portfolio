@@ -12,10 +12,14 @@ const fs = require('fs');
 const RESUMES_DIR = path.join(__dirname, '..', 'uploads', 'resumes');
 const IMAGES_DIR = path.join(__dirname, '..', 'uploads', 'images');
 
-// Ensure upload directories exist
+// Ensure upload directories exist (with safety check for read-only serverless platforms like Vercel)
 [RESUMES_DIR, IMAGES_DIR].forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+  try {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  } catch (err) {
+    console.warn(`[UPLOAD INIT] Directory initialization deferred for ${dir} (read-only environment):`, err.message);
   }
 });
 
@@ -76,14 +80,15 @@ const imageStorage = multer.diskStorage({
 });
 
 function imageFileFilter(req, file, cb) {
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.svg'];
+  // SVG disallowed to prevent Stored XSS attacks via embedded scripts
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
   const ext = path.extname(file.originalname).toLowerCase();
-  const allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+  const allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
 
   if (allowedExtensions.includes(ext) && allowedMimes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid image format. Only JPG, JPEG, PNG, WEBP, and SVG are allowed.'), false);
+    cb(new Error('Invalid image format. Only secure raster formats (JPG, JPEG, PNG, and WEBP) are allowed.'), false);
   }
 }
 

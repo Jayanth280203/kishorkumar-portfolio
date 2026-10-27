@@ -36,7 +36,7 @@ router.get('/experience', requireAdmin, (req, res) => {
 // ------------------------------------------------------------------------------
 router.post('/experience', requireAdmin, (req, res) => {
   try {
-    const { jobTitle, company, location, startDate, endDate, isCurrent, description, achievements, displayOrder } = req.body;
+    const { jobTitle, company, location, startDate, endDate, isCurrent, description, achievements, displayOrder } = req.body || {};
 
     if (!jobTitle || jobTitle.trim() === '') {
       return res.status(400).json({ success: false, error: 'Job title is required.' });
@@ -88,7 +88,7 @@ router.put('/experience/:id', requireAdmin, (req, res) => {
       return res.status(404).json({ success: false, error: 'Experience record not found.' });
     }
 
-    const { jobTitle, company, location, startDate, endDate, isCurrent, description, achievements, displayOrder } = req.body;
+    const { jobTitle, company, location, startDate, endDate, isCurrent, description, achievements, displayOrder } = req.body || {};
 
     if (jobTitle !== undefined && jobTitle.trim() === '') {
       return res.status(400).json({ success: false, error: 'Job title cannot be empty.' });

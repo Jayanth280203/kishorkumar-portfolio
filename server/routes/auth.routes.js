@@ -21,7 +21,7 @@ const loginLimiter = rateLimit({
 
 // POST /api/auth/login
 router.post('/login', loginLimiter, (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body || {};
   const result = loginAdmin(email, password);
 
   if (!result.success) {

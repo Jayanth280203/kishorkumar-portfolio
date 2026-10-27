@@ -11,6 +11,17 @@ const { requireAdmin } = require('../auth');
 
 const router = express.Router();
 
+// Helper to validate URLs (allows valid http/https URLs)
+function isValidUrl(string) {
+  if (!string || string.trim() === '') return false;
+  try {
+    const parsed = new URL(string);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch (_) {
+    return false;
+  }
+}
+
 // ------------------------------------------------------------------------------
 // GET /api/admin/social - List all social profiles (draft)
 // ------------------------------------------------------------------------------
@@ -29,14 +40,14 @@ router.get('/social', requireAdmin, (req, res) => {
 // ------------------------------------------------------------------------------
 router.post('/social', requireAdmin, (req, res) => {
   try {
-    const { platform, url, icon, accent, description, buttonLabel, displayOrder, isEnabled } = req.body;
+    const { platform, url, icon, accent, description, buttonLabel, displayOrder, isEnabled } = req.body || {};
 
     if (!platform || platform.trim() === '') {
       return res.status(400).json({ success: false, error: 'Platform name is required.' });
     }
 
-    if (!url || url.trim() === '') {
-      return res.status(400).json({ success: false, error: 'Valid URL is required.' });
+    if (!url || url.trim() === '' || !isValidUrl(url)) {
+      return res.status(400).json({ success: false, error: 'A valid http or https URL is required.' });
     }
 
     const newProfile = {
@@ -114,14 +125,14 @@ router.patch('/social/:id/toggle', requireAdmin, (req, res) => {
 // ------------------------------------------------------------------------------
 router.put('/social/:id', requireAdmin, (req, res) => {
   try {
-    const { platform, url, icon, accent, description, buttonLabel, displayOrder, isEnabled } = req.body;
+    const { platform, url, icon, accent, description, buttonLabel, displayOrder, isEnabled } = req.body || {};
 
     if (!platform || platform.trim() === '') {
       return res.status(400).json({ success: false, error: 'Platform name is required.' });
     }
 
-    if (!url || url.trim() === '') {
-      return res.status(400).json({ success: false, error: 'Valid URL is required.' });
+    if (!url || url.trim() === '' || !isValidUrl(url)) {
+      return res.status(400).json({ success: false, error: 'A valid http or https URL is required.' });
     }
 
     const updatedProfile = {

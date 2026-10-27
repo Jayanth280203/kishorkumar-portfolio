@@ -33,7 +33,7 @@ function sanitize(str) {
 // ------------------------------------------------------------------------------
 router.post('/contact', async (req, res) => {
   try {
-    const { name, email, subject, message, company_website_hp } = req.body;
+    const { name, email, subject, message, company_website_hp } = req.body || {};
 
     // 1. Honeypot check - if bot filled hidden field, return silent success
     if (company_website_hp && String(company_website_hp).trim() !== '') {
