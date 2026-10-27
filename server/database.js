@@ -9,6 +9,14 @@ const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 
+// Statically require database for Vercel Serverless Function bundling
+let bundledDb = null;
+try {
+  bundledDb = require('../data/portfolio_db.json');
+} catch (_) {
+  bundledDb = null;
+}
+
 const DB_FILE = path.join(__dirname, '..', 'data', 'portfolio_db.json');
 const DB_TMP = path.join(__dirname, '..', 'data', 'portfolio_db.json.tmp');
 
@@ -19,18 +27,30 @@ class PortfolioDatabase {
   }
 
   init() {
+    let rawData = null;
+
     if (fs.existsSync(DB_FILE)) {
       try {
         const raw = fs.readFileSync(DB_FILE, 'utf8');
-        this.data = JSON.parse(raw);
-        if (!this.data.enquiries) {
-          this.data.enquiries = [];
-        }
-        // Verify admin exists and update credentials if environment specifies new ones
-        this.ensureAdminCredentials();
+        rawData = JSON.parse(raw);
       } catch (err) {
-        console.error('Error reading database file, recreating from seed:', err);
-        this.createSeedData();
+        console.error('Error reading database file:', err);
+      }
+    }
+
+    // Fallback to statically bundled DB (critical for Vercel Serverless Functions)
+    if (!rawData && bundledDb) {
+      rawData = JSON.parse(JSON.stringify(bundledDb));
+    }
+
+    if (rawData) {
+      this.data = rawData;
+      if (!this.data.enquiries) {
+        this.data.enquiries = [];
+      }
+      // On Vercel, skip modifying disk credentials
+      if (!process.env.VERCEL) {
+        this.ensureAdminCredentials();
       }
     } else {
       this.createSeedData();
@@ -591,6 +611,10 @@ class PortfolioDatabase {
   }
 
   save() {
+    if (process.env.VERCEL) {
+      // Ephemeral in-memory save during current serverless invocation
+      return true;
+    }
     try {
       const json = JSON.stringify(this.data, null, 2);
       fs.writeFileSync(DB_TMP, json, 'utf8');

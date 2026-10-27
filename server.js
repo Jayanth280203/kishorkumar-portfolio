@@ -9,6 +9,7 @@ require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
@@ -119,19 +120,34 @@ app.get('/api/admin/gdrive-config', requireAdmin, (req, res) => {
 // ------------------------------------------------------------------------------
 // Page Routes
 // ------------------------------------------------------------------------------
+// Helper to resolve static HTML files safely across standalone and serverless environments
+function sendHtmlSafely(res, filename) {
+  const candidates = [
+    path.join(__dirname, filename),
+    path.join(__dirname, '..', filename),
+    path.join(process.cwd(), filename)
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) {
+      return res.sendFile(p);
+    }
+  }
+  return res.status(404).send(`${filename} not found.`);
+}
+
 // Public Homepage
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  sendHtmlSafely(res, 'index.html');
 });
 
 // Admin Dashboard Route
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  sendHtmlSafely(res, 'admin.html');
 });
 
 // Direct admin.html access
 app.get('/admin.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  sendHtmlSafely(res, 'admin.html');
 });
 
 // ------------------------------------------------------------------------------

@@ -2,7 +2,6 @@
   "name": "portfolio",
   "version": "1.0.0",
   "description": "A modern, responsive, and high-performance **Data Analyst Portfolio Website** built with clean HTML5, CSS3, and JavaScript. Designed specifically for job seekers in Data Analytics, Business Intelligence, and Data Science.",
-  "main": "server.js",
   "scripts": {
     "test": "node test_workflow.js",
     "start": "node server.js"
