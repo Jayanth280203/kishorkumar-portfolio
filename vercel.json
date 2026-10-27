@@ -1,4 +1,6 @@
 {
+  "installCommand": null,
+  "buildCommand": null,
   "cleanUrls": true,
   "rewrites": [
     {
